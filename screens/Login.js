@@ -80,7 +80,7 @@ export default class Login extends Component {
                 text: 'Hola!',
               },
             ]);
-            navigation.navigate('Browse', {Email: userEmail});
+            navigation.navigate('List', {Email: userEmail});
           } else {
             Alert.alert('Không thành công', responseJson);
           }
@@ -112,7 +112,6 @@ export default class Login extends Component {
   getRememberUser = async () => {
     try {
       const useremail = await AsyncStorage.getItem('useremail');
-      console.log(useremail);
       const password = await AsyncStorage.getItem('password');
       const user = {email: useremail, pass: password};
       if (useremail !== null && password !== null) {
