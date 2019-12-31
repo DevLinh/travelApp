@@ -5,19 +5,26 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   Alert,
+  CheckBox,
+  View,
 } from 'react-native';
 
 import {Button, Block, Input, Text} from '../components';
 import {theme} from '../constants';
 
+import AsyncStorage from '@react-native-community/async-storage';
+
 const VALID_EMAIL = 'devlinh99qb@gmail.com';
 const VALID_PASSWORD = '123abc';
 
 export default class Login extends Component {
-  componentDidMount() {
-    const {navigation} = this.props;
-    const mail = navigation.getParam('Email');
-    mail != null ? this.setState({userEmail: mail}) : {};
+  async componentDidMount() {
+    const savedUser = await this.getRememberUser();
+    this.setState({
+      userEmail: savedUser.email || '',
+      userPassword: savedUser.pass || '',
+      rememberMe: savedUser ? true : false,
+    });
   }
 
   constructor(props) {
@@ -27,6 +34,7 @@ export default class Login extends Component {
       userPassword: '',
       errors: [],
       loading: false,
+      rememberMe: false,
     };
   }
 
@@ -83,9 +91,50 @@ export default class Login extends Component {
     }
   }
 
+  toggleRememberMe = value => {
+    this.setState({rememberMe: value});
+    if (value === true) {
+      this.rememberUser();
+    } else {
+      this.forgetUser();
+    }
+  };
+
+  rememberUser = async () => {
+    try {
+      await AsyncStorage.setItem('useremail', this.state.userEmail);
+      await AsyncStorage.setItem('password', this.state.userPassword);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getRememberUser = async () => {
+    try {
+      const useremail = await AsyncStorage.getItem('useremail');
+      console.log(useremail);
+      const password = await AsyncStorage.getItem('password');
+      const user = {email: useremail, pass: password};
+      if (useremail !== null && password !== null) {
+        return user;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  forgetUser = async () => {
+    try {
+      await AsyncStorage.removeItem('useremail');
+      await AsyncStorage.removeItem('password');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   render() {
     const {navigation} = this.props;
-    const {loading, errors} = this.state;
+    const {loading, errors, rememberMe} = this.state;
     const hasErrors = key => (errors.includes(key) ? styles.hasErrors : null);
 
     return (
@@ -114,6 +163,15 @@ export default class Login extends Component {
               defaultValue={this.state.userPassword}
               onChangeText={text => this.setState({userPassword: text})}
             />
+            <View style={styles.saveUser}>
+              <CheckBox
+                value={rememberMe}
+                onValueChange={value => this.toggleRememberMe(value)}
+              />
+              <Text gray2 caption>
+                Lưu tài khoản
+              </Text>
+            </View>
             <Button gradient onPress={() => this.handleLogin()}>
               {loading ? (
                 <ActivityIndicator size="small" color="white" />
@@ -153,5 +211,9 @@ const styles = StyleSheet.create({
   },
   hasErrors: {
     borderBottomColor: theme.colors.accent,
+  },
+  saveUser: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
