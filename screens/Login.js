@@ -80,7 +80,10 @@ export default class Login extends Component {
                 text: 'Hola!',
               },
             ]);
-            navigation.navigate('List', {Email: userEmail});
+            navigation.navigate('List', {
+              Email: userEmail,
+              Password: userPassword,
+            });
           } else {
             Alert.alert('Không thành công', responseJson);
           }

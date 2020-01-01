@@ -225,6 +225,8 @@ class Articles extends Component {
       destinations: [],
       highlight: [],
       recommended: [],
+      email: '',
+      pw: '',
     };
   }
 
@@ -245,7 +247,15 @@ class Articles extends Component {
           <Text style={{color: theme.colors.caption}}>Search for place</Text>
           <Text style={{fontSize: theme.sizes.font * 2}}>Địa điểm nổi bật</Text>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+        <TouchableOpacity
+          onPress={() => {
+            const e = navigation.getParam('Email');
+            const p = navigation.getParam('Password');
+            navigation.navigate('Settings', {
+              Email: e,
+              Password: p,
+            });
+          }}>
           <Image
             style={styles.avatar}
             source={{
@@ -417,78 +427,84 @@ class Articles extends Component {
   };
 
   renderRecommendation = (item, index) => {
+    const {navigation} = this.props;
     const {destinations} = this.props;
     const isLastItem = index === destinations.length - 1;
     return (
-      <View
-        style={[
-          styles.flex,
-          styles.column,
-          styles.recommendation,
-          styles.shadow,
-          index === 0 ? {marginLeft: theme.sizes.margin} : null,
-          isLastItem ? {marginRight: theme.sizes.margin / 2} : null,
-        ]}>
-        <View style={[styles.flex, styles.recommendationHeader]}>
-          <Image
-            style={[styles.recommendationImage]}
-            source={{uri: item.preview}}
-          />
-          <View style={[styles.flex, styles.row, styles.recommendationOptions]}>
-            <Text style={styles.recommendationTemp}>{item.temperature}℃</Text>
-            <TouchableOpacity>
-              <FontAwesome
-                name={item.saved === '1' ? 'bookmark' : 'bookmark-o'}
-                color={theme.colors.white}
-                size={theme.sizes.font * 1.25}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
+      <TouchableOpacity
+        activeOpacity={0.3}
+        onPress={() => navigation.navigate('Article', {article: item})}>
         <View
           style={[
             styles.flex,
             styles.column,
+            styles.recommendation,
             styles.shadow,
-            {
-              justifyContent: 'space-evenly',
-              padding: theme.sizes.padding2 / 2,
-              flex: 1,
-            },
+            index === 0 ? {marginLeft: theme.sizes.margin} : null,
+            isLastItem ? {marginRight: theme.sizes.margin / 2} : null,
           ]}>
-          <Text
-            style={{
-              fontSize: theme.sizes.font * 1.25,
-              fontWeight: '500',
-              paddingBottom: theme.sizes.padding2 / 4.5,
-              flex: 2.5,
-            }}>
-            {item.title}
-          </Text>
-          <Text style={{color: theme.colors.caption, flex: 1}}>
-            <Octicons
-              name="location"
-              size={theme.sizes.font}
-              color={theme.colors.primary}
+          <View style={[styles.flex, styles.recommendationHeader]}>
+            <Image
+              style={[styles.recommendationImage]}
+              source={{uri: item.preview}}
             />
-            <Text> {item.location}</Text>
-          </Text>
-
+            <View
+              style={[styles.flex, styles.row, styles.recommendationOptions]}>
+              <Text style={styles.recommendationTemp}>{item.temperature}℃</Text>
+              <TouchableOpacity>
+                <FontAwesome
+                  name={item.saved === '1' ? 'bookmark' : 'bookmark-o'}
+                  color={theme.colors.white}
+                  size={theme.sizes.font * 1.25}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
           <View
             style={[
-              styles.row,
+              styles.flex,
+              styles.column,
+              styles.shadow,
               {
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginTop: theme.sizes.margin,
+                justifyContent: 'space-evenly',
+                padding: theme.sizes.padding2 / 2,
                 flex: 1,
               },
             ]}>
-            {this.renderRatings(item.rating)}
-            <Text style={{color: theme.colors.active}}>{item.rating}</Text>
+            <Text
+              style={{
+                fontSize: theme.sizes.font * 1.25,
+                fontWeight: '500',
+                paddingBottom: theme.sizes.padding2 / 4.5,
+                flex: 2.5,
+              }}>
+              {item.title}
+            </Text>
+            <Text style={{color: theme.colors.caption, flex: 1}}>
+              <Octicons
+                name="location"
+                size={theme.sizes.font}
+                color={theme.colors.primary}
+              />
+              <Text> {item.location}</Text>
+            </Text>
+
+            <View
+              style={[
+                styles.row,
+                {
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginTop: theme.sizes.margin,
+                  flex: 1,
+                },
+              ]}>
+              {this.renderRatings(item.rating)}
+              <Text style={{color: theme.colors.active}}>{item.rating}</Text>
+            </View>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 

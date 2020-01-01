@@ -6,21 +6,54 @@ import {Divider, Button, Block, Text, Switch} from '../components';
 import {theme, mocks} from '../constants';
 
 class Settings extends Component {
-  state = {
-    point: 485,
-    monthly: 1700,
-    notifications: true,
-    newsletter: false,
-    editing: null,
-    profile: {},
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      point: 0,
+      notifications: true,
+      newsletter: false,
+      editing: null,
+      user: [],
+    };
+  }
 
   componentDidMount() {
+    const {navigation} = this.props;
+    const userEmail = navigation.getParam('Email');
+    const userPassword = navigation.getParam('Password');
     this.setState({profile: this.props.profile});
+    fetch('https://myfreshfruits.000webhostapp.com/get_user.php', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: userEmail,
+
+        password: userPassword,
+      }),
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        console.log(responseJson);
+        this.setState({
+          user: responseJson,
+          point: Number(responseJson[5]),
+        });
+      })
+      .catch(error => {
+        console.error(error);
+      });
   }
 
   handleEdit(name, text) {
-    const {profile} = this.state;
+    const {user} = this.state;
+    const profile = {
+      username: user[3],
+      address: user[4],
+      email: user[1],
+    };
     profile[name] = text;
 
     this.setState({profile});
@@ -32,8 +65,13 @@ class Settings extends Component {
   }
 
   renderEdit(name) {
-    const {profile, editing} = this.state;
-
+    const {editing} = this.state;
+    const {user} = this.state;
+    const profile = {
+      username: user[3],
+      address: user[4],
+      email: user[1],
+    };
     if (editing === name) {
       return (
         <TextInput
@@ -47,8 +85,15 @@ class Settings extends Component {
   }
 
   render() {
-    const {profile, editing} = this.state;
-
+    const {editing} = this.state;
+    const {user} = this.state;
+    const profile = {
+      username: user[3],
+      address: user[4],
+      email: user[1],
+    };
+    const notifications = user[6] == '1' ? true : false;
+    const newsletter = user[7] == '1' ? true : false;
     return (
       <Block>
         <Block flex={false} row center space="between" style={styles.header}>
@@ -78,13 +123,10 @@ class Settings extends Component {
                 <Text gray2 style={{marginBottom: 10}}>
                   Địa chỉ
                 </Text>
-                {this.renderEdit('location')}
+                {this.renderEdit('address')}
               </Block>
-              <Text
-                medium
-                secondary
-                onPress={() => this.toggleEdit('location')}>
-                {editing === 'location' ? 'Lưu' : 'Chỉnh sửa'}
+              <Text medium secondary onPress={() => this.toggleEdit('address')}>
+                {editing === 'address' ? 'Lưu' : 'Chỉnh sửa'}
               </Text>
             </Block>
             <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
@@ -139,7 +181,7 @@ class Settings extends Component {
               style={{marginBottom: theme.sizes.base * 2}}>
               <Text gray2>Thông báo đẩy</Text>
               <Switch
-                value={this.state.notifications}
+                value={notifications}
                 onValueChange={value => this.setState({notifications: value})}
               />
             </Block>
@@ -151,7 +193,7 @@ class Settings extends Component {
               style={{marginBottom: theme.sizes.base * 2}}>
               <Text gray2>Nhận thông tin khuyến mãi qua mail</Text>
               <Switch
-                value={this.state.newsletter}
+                value={newsletter}
                 onValueChange={value => this.setState({newsletter: value})}
               />
             </Block>
@@ -161,10 +203,6 @@ class Settings extends Component {
     );
   }
 }
-
-Settings.defaultProps = {
-  profile: mocks.profile,
-};
 
 export default Settings;
 
