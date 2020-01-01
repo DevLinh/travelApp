@@ -12,7 +12,7 @@ import {
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
+import NumberFormat from 'react-number-format';
 import {theme} from '../constants';
 
 const {width, height} = Dimensions.get('window');
@@ -57,14 +57,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: theme.sizes.radius,
     marginTop: -theme.sizes.padding / 2,
   },
-  avatar: {
-    position: 'absolute',
-    top: -theme.sizes.margin,
-    right: theme.sizes.margin,
-    width: theme.sizes.padding * 2,
-    height: theme.sizes.padding * 2,
-    borderRadius: theme.sizes.padding,
-  },
   shadow: {
     shadowColor: theme.colors.black,
     shadowOffset: {
@@ -92,6 +84,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: theme.sizes.font * 2,
     fontWeight: 'bold',
+  },
+  price: {
+    fontSize: theme.sizes.font * 1.5,
+    color: theme.colors.primary,
+    paddingTop: theme.sizes.base / 2,
   },
   description: {
     fontSize: theme.sizes.font * 1.2,
@@ -182,7 +179,7 @@ class Article extends Component {
     for (var i in parsedImg) {
       images.push(parsedImg[i]);
     }
-    console.log(images);
+
     return (
       <View style={styles.flex}>
         <View style={[styles.flex]}>
@@ -211,6 +208,14 @@ class Article extends Component {
         <View style={[styles.flex, styles.content]}>
           <View style={[styles.flex, styles.contentHeader]}>
             <Text style={styles.title}>{article.title}</Text>
+            <NumberFormat
+              value={article.price}
+              displayType={'text'}
+              thousandSeparator={true}
+              suffix={' VND'}
+              renderText={value => <Text style={styles.price}>{value}</Text>}
+            />
+
             <View
               style={[
                 styles.row,
@@ -224,8 +229,8 @@ class Article extends Component {
             </View>
             <TouchableOpacity>
               <Text style={styles.description}>
-                {article.description.split('').slice(0, 150)}...
-                <Text style={{color: theme.colors.active}}> Read more</Text>
+                {article.description.split('').slice(0, 100)}...
+                <Text style={{color: theme.colors.active}}> Đọc tiếp</Text>
               </Text>
             </TouchableOpacity>
           </View>

@@ -19,91 +19,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import {theme} from '../constants';
 
 const {width, height} = Dimensions.get('window');
-const mocks = [
-  {
-    id: 1,
-    user: {
-      name: 'Linh Võ',
-      avatar: 'https://myfreshfruits.000webhostapp.com/avatar.png',
-    },
-    saved: true,
-    location: 'Bố Trạch, Quảng Bình',
-    temperature: 34,
-    title: 'Hang Sơn Đoòng',
-    description:
-      'Hang Sơn Đoòng nằm trong vùng lõi của Vườn Quốc gia Phong Nha – Kẻ Bàng, tỉnh Quảng Bình – là một hang động mới được Hiệp hội nghiên cứu hang động Hoàng gia Anh khám phá và công bố là hang động lớn nhất thế giới trong năm 2009 – 2010 và được đưa vào khai thác theo hình thức du lịch khám phá mạo hiểm từ năm 2013. Với cách khai thác hạn chế số lượng người tham gia, số lượng người chinh phục thành công Hang Sơn Đoòng hiện tại thậm chí còn ít hơn rất nhiều so với số lượng người đã từng đứng trên đỉnh Everest.',
-    rating: 4.3,
-    reviews: 3212,
-    preview: 'https://myfreshfruits.000webhostapp.com/phongnha2.jpg',
-    images: [
-      'https://myfreshfruits.000webhostapp.com/phongnha4.jpg',
-      'https://myfreshfruits.000webhostapp.com/phongnha3.jpg',
-      'https://myfreshfruits.000webhostapp.com/phongnha5.jpg',
-      'https://myfreshfruits.000webhostapp.com/phongnha1.jpg',
-    ],
-  },
-  {
-    id: 2,
-    user: {
-      name: 'Lelia Chavez',
-      avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
-    },
-    saved: false,
-    location: 'Loutraki, Greece',
-    temperature: 34,
-    title: 'Loutraki',
-    description: 'This attractive small town, 80 kilometers from Athens',
-    rating: 4.6,
-    reviews: 3212,
-    preview:
-      'https://images.unsplash.com/photo-1458906931852-47d88574a008?auto=format&fit=crop&w=800&q=80',
-    images: [
-      'https://images.unsplash.com/photo-1458906931852-47d88574a008?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1446903572544-8888a0e60687?auto=format&fit=crop&w=800&q=80',
-    ],
-  },
-  {
-    id: 3,
-    user: {
-      name: 'Lelia Chavez',
-      avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
-    },
-    saved: true,
-    location: 'Santorini, Greece',
-    temperature: 34,
-    title: 'Santorini',
-    description: 'Santorini - Description',
-    rating: 3.2,
-    reviews: 3212,
-    preview:
-      'https://images.unsplash.com/photo-1507501336603-6e31db2be093?auto=format&fit=crop&w=800&q=80',
-    images: [
-      'https://images.unsplash.com/photo-1507501336603-6e31db2be093?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1507501336603-6e31db2be093?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1507501336603-6e31db2be093?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1507501336603-6e31db2be093?auto=format&fit=crop&w=800&q=80',
-    ],
-  },
-  {
-    id: 4,
-    user: {
-      name: 'Lelia Chavez',
-      avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
-    },
-    location: 'Loutraki, Greece',
-    temperature: 34,
-    title: 'Loutraki',
-    description: 'This attractive small town, 80 kilometers from Athens',
-    rating: 5,
-    reviews: 3212,
-    preview:
-      'https://images.unsplash.com/photo-1458906931852-47d88574a008?auto=format&fit=crop&w=800&q=80',
-    images: [
-      'https://images.unsplash.com/photo-1458906931852-47d88574a008?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1446903572544-8888a0e60687?auto=format&fit=crop&w=800&q=80',
-    ],
-  },
-];
+
 const styles = StyleSheet.create({
   flex: {
     flex: 0,
@@ -348,7 +264,7 @@ class Articles extends Component {
     const {navigation} = this.props;
     return (
       <TouchableOpacity
-        activeOpacity={0.8}
+        activeOpacity={0.9}
         onPress={() => navigation.navigate('Article', {article: item})}>
         <ImageBackground
           style={[styles.flex, styles.destination, styles.shadow]}
@@ -395,6 +311,7 @@ class Articles extends Component {
   };
 
   renderRecommended = () => {
+    const {navigation} = this.props;
     const recommendedTour = this.state.destinations.filter(
       tour => tour.recommended == '1',
     );
@@ -402,7 +319,13 @@ class Articles extends Component {
       <View style={[styles.flex, styles.column, styles.recommended]}>
         <View style={[styles.row, styles.recommendedHeader]}>
           <Text style={{fontSize: theme.sizes.font * 1.4}}>Được gợi ý</Text>
-          <TouchableOpacity activeOpacity={0.5}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() =>
+              navigation.navigate('Browse', {
+                tours: this.state.destinations,
+              })
+            }>
             <Text style={{color: theme.colors.caption}}>Khám phá</Text>
           </TouchableOpacity>
         </View>
@@ -428,11 +351,11 @@ class Articles extends Component {
 
   renderRecommendation = (item, index) => {
     const {navigation} = this.props;
-    const {destinations} = this.props;
+    const {destinations} = this.state;
     const isLastItem = index === destinations.length - 1;
     return (
       <TouchableOpacity
-        activeOpacity={0.3}
+        activeOpacity={0.8}
         onPress={() => navigation.navigate('Article', {article: item})}>
         <View
           style={[
@@ -519,9 +442,5 @@ class Articles extends Component {
     );
   }
 }
-
-Articles.defaultProps = {
-  destinations: mocks,
-};
 
 export default Articles;

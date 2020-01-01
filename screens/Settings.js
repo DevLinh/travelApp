@@ -3,7 +3,7 @@ import {Image, StyleSheet, ScrollView, TextInput} from 'react-native';
 import Slider from 'react-native-slider';
 
 import {Divider, Button, Block, Text, Switch} from '../components';
-import {theme, mocks} from '../constants';
+import {theme} from '../constants';
 
 class Settings extends Component {
   constructor(props) {
