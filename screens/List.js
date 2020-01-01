@@ -12,6 +12,7 @@ import {
   Platform,
   TouchableOpacity,
 } from 'react-native';
+import {Button} from '../components';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Octicons from 'react-native-vector-icons/Octicons';
 
@@ -188,11 +189,6 @@ const styles = StyleSheet.create({
     height: theme.sizes.padding2,
     borderRadius: theme.sizes.padding2 / 2,
   },
-  rating: {
-    fontSize: theme.sizes.font * 2,
-    color: theme.colors.white,
-    fontWeight: 'bold',
-  },
   shadow: {
     shadowColor: theme.colors.black,
     shadowOffset: {
@@ -227,6 +223,8 @@ class Articles extends Component {
     super(props);
     this.state = {
       destinations: [],
+      highlight: [],
+      recommended: [],
     };
   }
 
@@ -240,27 +238,29 @@ class Articles extends Component {
       });
   }
 
-  static navigationOptions = {
+  static navigationOptions = ({navigation}) => ({
     header: (
       <View style={[styles.flex, styles.row, styles.header]}>
         <View>
           <Text style={{color: theme.colors.caption}}>Search for place</Text>
           <Text style={{fontSize: theme.sizes.font * 2}}>Địa điểm nổi bật</Text>
         </View>
-        <View>
+        <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
           <Image
             style={styles.avatar}
             source={{
               uri: 'https://myfreshfruits.000webhostapp.com/default_avatar.png',
             }}
           />
-        </View>
+        </TouchableOpacity>
       </View>
     ),
-  };
+  });
 
   renderDots() {
-    const {destinations} = this.state;
+    const highlightedTour = this.state.destinations.filter(
+      tour => tour.highlight == '1',
+    );
     const dotPosition = Animated.divide(this.scrollX, width);
     return (
       <View
@@ -269,22 +269,24 @@ class Articles extends Component {
           styles.row,
           {justifyContent: 'center', alignItems: 'center', marginTop: 10},
         ]}>
-        {destinations.map((item, index) => {
+        {highlightedTour.map((item, index) => {
           const borderWidth = dotPosition.interpolate({
             inputRange: [index - 1, index, index + 1],
             outputRange: [0, 2.5, 0],
             extrapolate: 'clamp',
           });
-          return (
-            <Animated.View
-              key={`step-${item.id}`}
-              style={[
-                styles.dots,
-                styles.activeDot,
-                {borderWidth: borderWidth},
-              ]}
-            />
-          );
+          if (item.highlight == '1') {
+            return (
+              <Animated.View
+                key={`step-${item.id}`}
+                style={[
+                  styles.dots,
+                  styles.activeDot,
+                  {borderWidth: borderWidth},
+                ]}
+              />
+            );
+          }
         })}
       </View>
     );
@@ -306,6 +308,9 @@ class Articles extends Component {
   }
 
   renderDestinations = () => {
+    const highlightedTour = this.state.destinations.filter(
+      tour => tour.highlight == '1',
+    );
     return (
       <View style={[styles.column, styles.destinations]}>
         <FlatList
@@ -317,7 +322,7 @@ class Articles extends Component {
           scrollEventThrottle={16}
           snapToAlignment="center"
           style={{overflow: 'visible', height: 280}}
-          data={this.state.destinations}
+          data={highlightedTour}
           keyExtractor={(item, index) => `${item.id}`}
           onScroll={Animated.event([
             {nativeEvent: {contentOffset: {x: this.scrollX}}},
@@ -348,24 +353,7 @@ class Articles extends Component {
               style={[
                 styles.column,
                 {flex: 1, paddingHorizontal: theme.sizes.padding2 / 3},
-              ]}>
-              <Text style={{color: theme.colors.white}}>
-                <Octicons
-                  name="location"
-                  size={theme.sizes.font * 0.8}
-                  color={theme.colors.white}
-                />
-                <Text> {item.location}</Text>
-              </Text>
-            </View>
-            <View
-              style={{
-                flex: 0,
-                justifyContent: 'center',
-                alignItems: 'flex-end',
-              }}>
-              <Text style={styles.rating}>{item.rating}</Text>
-            </View>
+              ]}></View>
           </View>
         </ImageBackground>
         <View style={[styles.column, styles.destinationInfo, styles.shadow]}>
@@ -373,10 +361,10 @@ class Articles extends Component {
             style={{
               fontSize: theme.sizes.font * 1.25,
               fontWeight: '500',
-              paddingBottom: 8,
             }}>
             {item.title}
           </Text>
+
           <View
             style={[
               styles.row,
@@ -397,12 +385,15 @@ class Articles extends Component {
   };
 
   renderRecommended = () => {
+    const recommendedTour = this.state.destinations.filter(
+      tour => tour.recommended == '1',
+    );
     return (
       <View style={[styles.flex, styles.column, styles.recommended]}>
         <View style={[styles.row, styles.recommendedHeader]}>
-          <Text style={{fontSize: theme.sizes.font * 1.4}}>Recommended</Text>
+          <Text style={{fontSize: theme.sizes.font * 1.4}}>Được gợi ý</Text>
           <TouchableOpacity activeOpacity={0.5}>
-            <Text style={{color: theme.colors.caption}}>More</Text>
+            <Text style={{color: theme.colors.caption}}>Khám phá</Text>
           </TouchableOpacity>
         </View>
         <View style={[styles.column, styles.recommendedList]}>
@@ -414,7 +405,7 @@ class Articles extends Component {
             scrollEventThrottle={16}
             snapToAlignment="center"
             style={[styles.shadow, {overflow: 'visible'}]}
-            data={this.state.destinations}
+            data={recommendedTour}
             keyExtractor={(item, index) => `${item.id}`}
             renderItem={({item, index}) =>
               this.renderRecommendation(item, index)
@@ -445,11 +436,13 @@ class Articles extends Component {
           />
           <View style={[styles.flex, styles.row, styles.recommendationOptions]}>
             <Text style={styles.recommendationTemp}>{item.temperature}℃</Text>
-            <FontAwesome
-              name={item.saved === '1' ? 'bookmark' : 'bookmark-o'}
-              color={theme.colors.white}
-              size={theme.sizes.font * 1.25}
-            />
+            <TouchableOpacity>
+              <FontAwesome
+                name={item.saved === '1' ? 'bookmark' : 'bookmark-o'}
+                color={theme.colors.white}
+                size={theme.sizes.font * 1.25}
+              />
+            </TouchableOpacity>
           </View>
         </View>
         <View
@@ -460,6 +453,7 @@ class Articles extends Component {
             {
               justifyContent: 'space-evenly',
               padding: theme.sizes.padding2 / 2,
+              flex: 1,
             },
           ]}>
           <Text
@@ -467,10 +461,19 @@ class Articles extends Component {
               fontSize: theme.sizes.font * 1.25,
               fontWeight: '500',
               paddingBottom: theme.sizes.padding2 / 4.5,
+              flex: 2.5,
             }}>
             {item.title}
           </Text>
-          <Text style={{color: theme.colors.caption}}>{item.location}</Text>
+          <Text style={{color: theme.colors.caption, flex: 1}}>
+            <Octicons
+              name="location"
+              size={theme.sizes.font}
+              color={theme.colors.primary}
+            />
+            <Text> {item.location}</Text>
+          </Text>
+
           <View
             style={[
               styles.row,
@@ -478,6 +481,7 @@ class Articles extends Component {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 marginTop: theme.sizes.margin,
+                flex: 1,
               },
             ]}>
             {this.renderRatings(item.rating)}
