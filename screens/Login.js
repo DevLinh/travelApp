@@ -2,13 +2,12 @@ import React, {Component} from 'react';
 import {
   ActivityIndicator,
   Keyboard,
-  KeyboardAvoidingView,
   StyleSheet,
   Alert,
   CheckBox,
   View,
 } from 'react-native';
-
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Button, Block, Input, Text} from '../components';
 import {theme} from '../constants';
 
@@ -140,7 +139,10 @@ export default class Login extends Component {
     const hasErrors = key => (errors.includes(key) ? styles.hasErrors : null);
 
     return (
-      <KeyboardAvoidingView style={styles.login} behavior="padding">
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.login}
+        scrollEnabled={false}
+        resetScrollToCoords={{x: 0, y: 0}}>
         <Block padding={[0, theme.sizes.base * 2]}>
           <Text h1 bold>
             Đăng nhập
@@ -195,7 +197,7 @@ export default class Login extends Component {
             </Button>
           </Block>
         </Block>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     );
   }
 }

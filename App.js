@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, StatusBar} from 'react-native';
 
 import Navigation from './navigation';
 import {Block} from './components';
@@ -57,6 +57,7 @@ export default class App extends React.Component {
 
     return (
       <Block white>
+        <StatusBar hidden={true} />
         <Navigation />
       </Block>
     );

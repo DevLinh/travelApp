@@ -1,15 +1,9 @@
 import React, {Component} from 'react';
-import {
-  Alert,
-  ActivityIndicator,
-  Keyboard,
-  KeyboardAvoidingView,
-  StyleSheet,
-} from 'react-native';
+import {Alert, ActivityIndicator, Keyboard, StyleSheet} from 'react-native';
 
 import {Button, Block, Input, Text} from '../components';
 import {theme} from '../constants';
-
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 export default class SignUp extends Component {
   constructor(props) {
     super(props);
@@ -86,7 +80,10 @@ export default class SignUp extends Component {
     const hasErrors = key => (errors.includes(key) ? styles.hasErrors : null);
 
     return (
-      <KeyboardAvoidingView style={styles.signup} behavior="padding">
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.signup}
+        scrollEnabled={false}
+        resetScrollToCoords={{x: 0, y: 0}}>
         <Block padding={[0, theme.sizes.base * 2]}>
           <Text h1 bold>
             Đăng ký
@@ -140,7 +137,7 @@ export default class SignUp extends Component {
             </Button>
           </Block>
         </Block>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     );
   }
 }
