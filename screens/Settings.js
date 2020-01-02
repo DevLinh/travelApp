@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {Image, StyleSheet, ScrollView, TextInput} from 'react-native';
+import {StyleSheet, ScrollView, TextInput} from 'react-native';
 import Slider from 'react-native-slider';
 
-import {Divider, Button, Block, Text, Switch} from '../components';
+import {Divider, Block, Text, Switch} from '../components';
 import {theme} from '../constants';
 
 class Settings extends Component {
@@ -92,8 +92,8 @@ class Settings extends Component {
       address: user[4],
       email: user[1],
     };
-    const notifications = user[6] == '1' ? true : false;
-    const newsletter = user[7] == '1' ? true : false;
+    // const notifications = user[6] == '1' ? true : false;
+    // const newsletter = user[7] == '1' ? true : false;
     return (
       <Block>
         <Block flex={false} row center space="between" style={styles.header}>
@@ -151,6 +151,7 @@ class Settings extends Component {
                 Điểm tích lũy
               </Text>
               <Slider
+                disabled={true}
                 minimumValue={0}
                 maximumValue={1000}
                 style={{height: 19}}
@@ -181,7 +182,7 @@ class Settings extends Component {
               style={{marginBottom: theme.sizes.base * 2}}>
               <Text gray2>Thông báo đẩy</Text>
               <Switch
-                value={notifications}
+                value={this.state.notifications}
                 onValueChange={value => this.setState({notifications: value})}
               />
             </Block>
@@ -193,7 +194,7 @@ class Settings extends Component {
               style={{marginBottom: theme.sizes.base * 2}}>
               <Text gray2>Nhận thông tin khuyến mãi qua mail</Text>
               <Switch
-                value={newsletter}
+                value={this.state.newsletter}
                 onValueChange={value => this.setState({newsletter: value})}
               />
             </Block>

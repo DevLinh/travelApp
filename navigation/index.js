@@ -8,7 +8,6 @@ import Login from '../screens/Login';
 import SignUp from '../screens/SignUp';
 import Forgot from '../screens/Forgot';
 import Browse from '../screens/Browse';
-import Product from '../screens/Product';
 import Settings from '../screens/Settings';
 import Article from '../screens/Article';
 import List from '../screens/List';
@@ -22,7 +21,6 @@ const screens = createStackNavigator(
     SignUp,
     Forgot,
     Browse,
-    Product,
     Settings,
     List,
     Article,
