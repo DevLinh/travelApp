@@ -9,12 +9,12 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-
+import {Divider, Button} from '../components';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import NumberFormat from 'react-number-format';
 import {theme} from '../constants';
-
+import LinearGradient from 'react-native-linear-gradient';
 const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -45,9 +45,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   content: {
-    // backgroundColor: theme.colors.active,
-    // borderTopLeftRadius: theme.sizes.border,
-    // borderTopRightRadius: theme.sizes.border,
+    backgroundColor: theme.colors.active,
+    borderTopLeftRadius: theme.sizes.border,
+    borderTopRightRadius: theme.sizes.border,
   },
   contentHeader: {
     backgroundColor: 'transparent',
@@ -88,12 +88,13 @@ const styles = StyleSheet.create({
   price: {
     fontSize: theme.sizes.font * 1.5,
     color: theme.colors.primary,
-    paddingTop: theme.sizes.base / 2,
+    paddingTop: theme.sizes.base / 4,
   },
   description: {
     fontSize: theme.sizes.font * 1.2,
     lineHeight: theme.sizes.font * 2,
     color: theme.colors.caption,
+    textAlign: 'justify',
   },
 });
 
@@ -179,6 +180,14 @@ class Article extends Component {
     for (var i in parsedImg) {
       images.push(parsedImg[i]);
     }
+    let tourAdd = {
+      id: article.id,
+      title: article.title,
+      price: article.price,
+      preview: article.preview,
+      location: article.location,
+      quantity: 1,
+    };
 
     return (
       <View style={styles.flex}>
@@ -199,13 +208,13 @@ class Article extends Component {
                 key={`${index}-${img}`}
                 source={{uri: img}}
                 resizeMode="cover"
-                style={{width, height: width}}
+                style={{width: width, height: height / 2.2}}
               />
             ))}
           </ScrollView>
           {this.renderDots()}
         </View>
-        <View style={[styles.flex, styles.content]}>
+        <View style={[styles.flex]}>
           <View style={[styles.flex, styles.contentHeader]}>
             <Text style={styles.title}>{article.title}</Text>
             <NumberFormat
@@ -219,7 +228,7 @@ class Article extends Component {
             <View
               style={[
                 styles.row,
-                {alignItems: 'center', marginVertical: theme.sizes.margin / 2},
+                {alignItems: 'center', marginVertical: theme.sizes.margin / 4},
               ]}>
               {this.renderRatings(article.rating)}
               <Text style={{color: theme.colors.active}}>{article.rating}</Text>
@@ -227,12 +236,28 @@ class Article extends Component {
                 ({article.reviews} nhận xét)
               </Text>
             </View>
+            <Divider margin={[theme.sizes.base / 2, theme.sizes.base / 4]} />
             <TouchableOpacity>
               <Text style={styles.description}>
-                {article.description.split('').slice(0, 100)}...
+                {article.description.split('').slice(0, 120)}...
                 <Text style={{color: theme.colors.active}}> Đọc tiếp</Text>
               </Text>
             </TouchableOpacity>
+            <Divider margin={[theme.sizes.base / 4, theme.sizes.base / 4]} />
+            <View style={{justifyContent: 'center'}}>
+              <Button
+                gradient
+                onPress={() => navigation.navigate('Cart', {tour: tourAdd})}>
+                <Text
+                  style={{
+                    color: theme.colors.white,
+                    textAlign: 'center',
+                    fontSize: theme.sizes.font * 1.3,
+                  }}>
+                  Thêm vào giỏ hàng
+                </Text>
+              </Button>
+            </View>
           </View>
         </View>
       </View>

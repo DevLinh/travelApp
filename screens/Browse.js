@@ -58,7 +58,11 @@ class Browse extends Component {
         key={`tab-${tab}`}
         onPress={() => this.handleTab(tab)}
         style={[styles.tab, isActive ? styles.active : null]}>
-        <Text size={12} medium gray={!isActive} secondary={isActive}>
+        <Text
+          size={width > 900 ? 20 : 12}
+          medium
+          gray={!isActive}
+          secondary={isActive}>
           {tab}
         </Text>
       </TouchableOpacity>

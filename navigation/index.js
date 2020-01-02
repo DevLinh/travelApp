@@ -7,12 +7,12 @@ import Welcome from '../screens/Welcome';
 import Login from '../screens/Login';
 import SignUp from '../screens/SignUp';
 import Forgot from '../screens/Forgot';
-import Explore from '../screens/Explore';
 import Browse from '../screens/Browse';
 import Product from '../screens/Product';
 import Settings from '../screens/Settings';
 import Article from '../screens/Article';
 import List from '../screens/List';
+import Cart from '../screens/Cart';
 import {theme} from '../constants';
 
 const screens = createStackNavigator(
@@ -21,12 +21,12 @@ const screens = createStackNavigator(
     Login,
     SignUp,
     Forgot,
-    Explore,
     Browse,
     Product,
     Settings,
     List,
     Article,
+    Cart,
   },
   {
     mode: 'modal',

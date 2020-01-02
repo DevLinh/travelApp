@@ -5141,6 +5141,11 @@ react-native-gesture-handler@^1.5.2:
     invariant "^2.2.4"
     prop-types "^15.7.2"
 
+react-native-input-spinner@^1.2.8:
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/react-native-input-spinner/-/react-native-input-spinner-1.2.8.tgz#e3566e465e46be19ef5039ecc38dfaaecfa0bc28"
+  integrity sha512-CNiy/TwCz1dZ55MJytCHScMH+9TOA7UvxC2XIe9HHMmIsVk8mCjDzQcFh71vMTnoMHskaW54O90l8tbiu6ynwg==
+
 react-native-intl@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-intl/-/react-native-intl-1.0.0.tgz#c1e2281125f925b323d1c8837586774876abe703"

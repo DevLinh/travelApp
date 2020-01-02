@@ -12,7 +12,6 @@ import {
   Platform,
   TouchableOpacity,
 } from 'react-native';
-import {Button} from '../components';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Octicons from 'react-native-vector-icons/Octicons';
 
@@ -63,13 +62,11 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     width: width - theme.sizes.padding2 * 4,
   },
-  recommended: {},
   recommendedHeader: {
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     paddingHorizontal: theme.sizes.padding2,
   },
-  recommendedList: {},
   recommendation: {
     width: (width - theme.sizes.padding2 * 2) / 2,
     marginHorizontal: 8,
@@ -101,8 +98,8 @@ const styles = StyleSheet.create({
     height: (width - theme.sizes.padding2 * 2) / 2,
   },
   avatar: {
-    width: theme.sizes.padding2,
-    height: theme.sizes.padding2,
+    width: theme.sizes.padding2 * 0.8,
+    height: theme.sizes.padding2 * 0.8,
     borderRadius: theme.sizes.padding2 / 2,
   },
   shadow: {
@@ -160,7 +157,7 @@ class Articles extends Component {
     header: (
       <View style={[styles.flex, styles.row, styles.header]}>
         <View>
-          <Text style={{color: theme.colors.caption}}>Search for place</Text>
+          <Text style={{color: theme.colors.caption}}>Welcome to yourTRIP</Text>
           <Text style={{fontSize: theme.sizes.font * 2}}>Địa điểm nổi bật</Text>
         </View>
         <TouchableOpacity
@@ -171,12 +168,29 @@ class Articles extends Component {
               Email: e,
               Password: p,
             });
+            // navigation.navigate('Cart', {
+            //   Email: e,
+            //   Password: p,
+            // });
           }}>
           <Image
             style={styles.avatar}
             source={{
               uri: 'https://myfreshfruits.000webhostapp.com/default_avatar.png',
             }}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            const id = navigation.getParam('id');
+            navigation.navigate('Cart', {
+              id: id,
+            });
+          }}>
+          <FontAwesome
+            name="shopping-cart"
+            size={theme.sizes.font * 2}
+            color={theme.colors.primary}
           />
         </TouchableOpacity>
       </View>
@@ -326,7 +340,10 @@ class Articles extends Component {
                 tours: this.state.destinations,
               })
             }>
-            <Text style={{color: theme.colors.caption}}>Khám phá</Text>
+            <Text
+              style={{color: theme.colors.primary, fontSize: theme.sizes.h2}}>
+              Khám phá
+            </Text>
           </TouchableOpacity>
         </View>
         <View style={[styles.column, styles.recommendedList]}>
@@ -351,8 +368,10 @@ class Articles extends Component {
 
   renderRecommendation = (item, index) => {
     const {navigation} = this.props;
-    const {destinations} = this.state;
-    const isLastItem = index === destinations.length - 1;
+    const recommendedTour = this.state.destinations.filter(
+      tour => tour.recommended == '1',
+    );
+    const isLastItem = index === recommendedTour.length - 1;
     return (
       <TouchableOpacity
         activeOpacity={0.8}
@@ -364,7 +383,7 @@ class Articles extends Component {
             styles.recommendation,
             styles.shadow,
             index === 0 ? {marginLeft: theme.sizes.margin} : null,
-            isLastItem ? {marginRight: theme.sizes.margin / 2} : null,
+            isLastItem ? {marginRight: theme.sizes.margin} / 2 : null,
           ]}>
           <View style={[styles.flex, styles.recommendationHeader]}>
             <Image
@@ -389,7 +408,7 @@ class Articles extends Component {
               styles.column,
               styles.shadow,
               {
-                justifyContent: 'space-evenly',
+                justifyContent: 'space-between',
                 padding: theme.sizes.padding2 / 2,
                 flex: 1,
               },
